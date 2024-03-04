@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
 
-const Formulario = () => {
+const TareaFormMas = () => {
     const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+    });
+
+    const [validationErrors, setValidationErrors] = useState({
         firstName: '',
         lastName: '',
         email: '',
@@ -15,11 +23,34 @@ const Formulario = () => {
             ...prevData,
             [name]: value,
         }));
+
+        setValidationErrors((prevErrors) => {
+            const errors = { ...prevErrors };
+
+            switch (name) {
+                case 'firstName':
+                case 'lastName':
+                    errors[name] = value.length < 2 ? `${name} must be at least 2 characters.` : '';
+                    break;
+                case 'email':
+                    errors[name] = value.length < 5 ? `${name} must be at least 5 characters.` : '';
+                    break;
+                case 'password':
+                    errors[name] = value.length < 8 ? `${name} must be at least 8 characters.` : '';
+                    break;
+                case 'confirmPassword':
+                    errors[name] = value !== formData.password ? 'muts match.' : '';
+                    break;
+                default:
+                    break;
+            }
+
+            return errors;
+        });
     };
 
     return (
         <div className="container mt-3">
-
             <form>
                 <div className="mb-3">
                     <label htmlFor="firstName" className="form-label">First Name:</label>
@@ -31,7 +62,9 @@ const Formulario = () => {
                         value={formData.firstName}
                         onChange={handleChange}
                     />
+                    
                 </div>
+                <p className="text-danger">{validationErrors.firstName}</p>
 
                 <div className="mb-3">
                     <label htmlFor="lastName" className="form-label">Last Name:</label>
@@ -43,7 +76,9 @@ const Formulario = () => {
                         value={formData.lastName}
                         onChange={handleChange}
                     />
+                    
                 </div>
+                <p className="text-danger">{validationErrors.lastName}</p>
 
                 <div className="mb-3">
                     <label htmlFor="email" className="form-label">Email:</label>
@@ -55,7 +90,9 @@ const Formulario = () => {
                         value={formData.email}
                         onChange={handleChange}
                     />
+                    
                 </div>
+                <p className="text-danger">{validationErrors.email}</p>
 
                 <div className="mb-3">
                     <label htmlFor="password" className="form-label">Password:</label>
@@ -67,7 +104,9 @@ const Formulario = () => {
                         value={formData.password}
                         onChange={handleChange}
                     />
+                    
                 </div>
+                <p className="text-danger">{validationErrors.password}</p>
 
                 <div className="mb-3">
                     <label htmlFor="confirmPassword" className="form-label">Confirm Password:</label>
@@ -79,20 +118,14 @@ const Formulario = () => {
                         value={formData.confirmPassword}
                         onChange={handleChange}
                     />
+                    
                 </div>
-
-
+                <p className="text-danger">{validationErrors.confirmPassword}</p>
             </form>
-            <h4>Your Form Data</h4>
-            <div className="mt-3">
-                <p>First Name: {formData.firstName}</p>
-                <p>Last Name: {formData.lastName}</p>
-                <p>Email: {formData.email}</p>
-                <p>Password: {formData.password}</p>
-                <p>Confirm Password: {formData.confirmPassword}</p>
-            </div>
+
+
         </div>
     );
 };
 
-export default Formulario;
+export default TareaFormMas;
